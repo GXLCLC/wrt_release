@@ -670,3 +670,10 @@ update_package() {
         echo "更新软件包 $1 到 $PKG_VER $PKG_HASH"
     fi
 }
+# TurboACC 网络加速插件
+sync_sparse_packages_to_feed_dir \
+  "https://github.com/chenmozhijin/turboacc.git" \
+  "luci" \
+  "$BUILD_DIR/package/feeds/custom_feed" \
+  "turboacc"
+
