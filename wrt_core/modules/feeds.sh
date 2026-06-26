@@ -30,7 +30,8 @@ update_feeds() {
     append_feed_if_missing "$FEEDS_PATH" "openwrt_bandix" "src-git openwrt_bandix https://github.com/timsaya/openwrt-bandix.git;main"
     append_feed_if_missing "$FEEDS_PATH" "luci_app_bandix" "src-git luci_app_bandix https://github.com/timsaya/luci-app-bandix.git;main"
     # 新增软件源
-    append_feed_if_missing "$FEEDS_PATH" "ddnsto" "src-git ddnsto https://github.com/kenzok8/openwrt-packages.git;main"
+    append_feed_if_missing "$FEEDS_PATH" "ddnsto" "src-git ddnsto https://github.com/kenzok8/openwrt-packages/tree/master/ddnsto.git;main"
+append_feed_if_missing " $FEEDS_PATH " "ddnsto" "src-git ddnsto .git;main"
     if [ ! -f "$BUILD_DIR/include/bpf.mk" ]; then
         touch "$BUILD_DIR/include/bpf.mk"
     fi
