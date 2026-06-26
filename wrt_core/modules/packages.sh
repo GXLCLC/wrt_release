@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# TurboACC 网络加速插件
-sync_sparse_packages_to_feed_dir \
-  "https://github.com/chenmozhijin/turboacc.git" \
-  "luci" \
-  "$BUILD_DIR/package/feeds/custom_feed" \
-  "turboacc"
 
 remove_unwanted_packages() {
     local luci_packages=(
