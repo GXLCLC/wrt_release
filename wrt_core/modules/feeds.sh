@@ -37,7 +37,6 @@ update_feeds() {
     #添加turboacc源
     append_feed_if_missing "$FEEDS_PATH" "turboacc" "src-git turboacc https://github.com/chenmozhijin/turboacc.git;luci"
 
-    
     if [ ! -f "$BUILD_DIR/include/bpf.mk" ]; then
         touch "$BUILD_DIR/include/bpf.mk"
     fi
