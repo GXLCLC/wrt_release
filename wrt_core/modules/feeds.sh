@@ -35,7 +35,7 @@ update_feeds() {
     append_feed_if_missing "$FEEDS_PATH" "nas" "src-git nas https://github.com/linkease/nas-packages.git;master"
     append_feed_if_missing "$FEEDS_PATH" "nas_luci" "src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main"
     #添加turboacc源
-    append_feed_if_missing "turboacc" "src-git turboacc https://gitcode.com/gh_mirrors/tu/turboacc.git;main"
+    append_feed_if_missing "$FEEDS_PATH" "luci-app-turboacc" "src-git turboacc https://gitcode.com/gh_mirrors/tu/turboacc.git;main"
 
     
     if [ ! -f "$BUILD_DIR/include/bpf.mk" ]; then
