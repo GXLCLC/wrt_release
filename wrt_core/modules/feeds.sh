@@ -14,7 +14,6 @@ append_feed_if_missing() {
     local feed_entry="$3"
 
     if ! grep -q "$match_pattern" "$feeds_path"; then
-        [ -z "$(tail -c 1 "$feeds_path")" ] || echo "" >>"$feeds_path"
         echo "$feed_entry" >>"$feeds_path"
     fi
 }
@@ -22,7 +21,6 @@ append_feed_if_missing() {
 update_feeds() {
     local FEEDS_PATH
     FEEDS_PATH=$(get_feeds_path)
-    sed -i '/^#/d' "$FEEDS_PATH"
     sed -i '/packages_ext/d' "$FEEDS_PATH"
     sed -i '/[[:space:]]small8[[:space:]]/d' "$FEEDS_PATH"
     sed -i '/[[:space:]]custom_feed[[:space:]]/d' "$FEEDS_PATH"
