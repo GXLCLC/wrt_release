@@ -30,7 +30,8 @@ update_feeds() {
     append_feed_if_missing "$FEEDS_PATH" "openwrt_bandix" "src-git openwrt_bandix https://github.com/timsaya/openwrt-bandix.git;main"
     append_feed_if_missing "$FEEDS_PATH" "luci_app_bandix" "src-git luci_app_bandix https://github.com/timsaya/luci-app-bandix.git;main"
     
-    #过时原仓库迁移append_feed_if_missing "$FEEDS_PATH" "ddnsto" "src-git ddnsto https://github.com/linkease/ddnsto-openwrt.git;main"
+    #过时原仓库迁移
+    #append_feed_if_missing "$FEEDS_PATH" "ddnsto" "src-git ddnsto https://github.com/linkease/ddnsto-openwrt.git;main"
     #添加新的DDNSTO源
     append_feed_if_missing "$FEEDS_PATH" "nas" "src-git nas https://github.com/linkease/nas-packages.git;master"
     append_feed_if_missing "$FEEDS_PATH" "nas_luci" "src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main"
