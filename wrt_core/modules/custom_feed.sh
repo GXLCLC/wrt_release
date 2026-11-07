@@ -213,7 +213,7 @@ install_custom_feed() {
         luci-app-passwall nikki luci-app-nikki mihomo-meta
         open-app-filter luci-app-oaf lucky luci-app-lucky luci-app-easytier
         luci-app-emmc-health luci-app-airoha-npu
-        ddnsto luci-app-ddnsto luci-theme-argon
+        ddnsto luci-app-ddnsto luci-theme-argon luci-app-argon-config
     )
     local custom_feed_sources=()
     local missing_feed_dirs=()
@@ -261,6 +261,16 @@ install_custom_feed() {
     done
 
     if ! sync_repo_root_package_to_feed_dir "https://github.com/adminchenyu/eMMC-Health.git" "main" "$custom_feed_dir" "adminchenyu/eMMC-Health" "luci-app-emmc-health"; then
+        rm -rf "$custom_feed_dir"
+        return 1
+    fi
+
+    # 2026-11-07：添加 Argon 主题配置插件 luci-app-argon-config。
+    # 已核实现有源 kenzok8/small-package 顶层没有该独立包目录（仅有
+    # luci-theme-argon/compat/luci-app-argon-config 兼容子目录），因此改用官方单包仓库：
+    # 仓库根目录即 OpenWrt 软件包（含 Makefile），适合 sync_repo_root_package_to_feed_dir。
+    # 分支留空表示使用仓库默认分支，避免写死分支名导致 clone 失败。
+    if ! sync_repo_root_package_to_feed_dir "https://github.com/jerrykuku/luci-app-argon-config.git" "" "$custom_feed_dir" "jerrykuku/luci-app-argon-config" "luci-app-argon-config"; then
         rm -rf "$custom_feed_dir"
         return 1
     fi

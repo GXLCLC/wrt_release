@@ -121,8 +121,8 @@ GitHub Actions 的手动构建也提供 `add_fragments` 与 `remove_fragments` �
 
 ### 默认主题与 Wi-Fi 名称（2026-11-07 起）
 
-- 默认 LuCI 主题为 Argon：`wrt_core/update.sh` 的 `THEME_SET="argon"`，主题包 `luci-theme-argon` 由 `custom_feed` 从 `kenzok8/small-package` 同步，`fix_default_set()` 会把 LuCI 默认主题依赖改为该包。
-- Wi-Fi 名称不再按机型命名：LibWrt 固件为 `Libwrt`（2.4G）/ `Libwrt_5G`（5G），其余（ImmortalWrt 系）固件为 `Immortalwrt` / `Immortalwrt_5G`。前缀由 `build.sh` 依据设备配置名判定，编译期注入 `wrt_core/patches/992_set-wifi-uci.sh`。
+- 默认 LuCI 主题为 Argon：`wrt_core/update.sh` 的 `THEME_SET="argon"`，主题包 `luci-theme-argon` 由 `custom_feed` 从 `kenzok8/small-package` 同步，`fix_default_set()` 会把 LuCI 默认主题依赖改为该包；另内置主题配置插件 `luci-app-argon-config`，源码来自 `jerrykuku/luci-app-argon-config` 单包仓库。
+- Wi-Fi 名称不再按机型命名：LibWrt 固件为 `LibWrt`（2.4G）/ `LibWrt_5G`（5G），其余（ImmortalWrt 系）固件为 `Immortalwrt` / `Immortalwrt_5G`。前缀由 `build.sh` 依据设备配置名判定，编译期注入 `wrt_core/patches/992_set-wifi-uci.sh`。
 - 共享配置 `compile_base.config` 补充了 USB 核心与 USB 网络内核模块（`kmod-usb-core`、`kmod-usb3`、`kmod-usb-net` 及若干 `kmod-usb-net-*`）。
 
 ## 7. 三方插件

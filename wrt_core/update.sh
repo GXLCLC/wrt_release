@@ -98,13 +98,15 @@ stage_pre_install_source_fixes() {
     fix_compile_coremark
     update_dnsmasq_conf
     add_backup_info_to_sysupgrade
-    update_mosdns_deconfig
+    # 2026-11-07：MosDNS 已从固件移除，停用其默认配置改写。
+    # update_mosdns_deconfig
     fix_quickstart
     # 2026-11-07：按要求默认启用 OAF，替换原先的禁用逻辑。
     enable_oaf_by_default
     add_timecontrol
     add_quickfile
-    update_lucky
+    # 2026-11-07：Lucky 已从固件移除，停用源码更新与 50MB 二进制补丁注入。
+    # update_lucky
     # fix_rust_compile_error
     update_smartdns
     update_mwan3_fw4

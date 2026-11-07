@@ -11,7 +11,7 @@ fix_default_set() {
     install -Dm544 "$BASE_PATH/patches/992_set-wifi-uci.sh" "$BUILD_DIR/package/base-files/files/etc/uci-defaults/992_set-wifi-uci.sh"
 
     # 2026-11-07：Wi-Fi 名称不再按机型命名。编译期把脚本中的 @WIFI_SSID_PREFIX@
-    # 替换为 build.sh 导出的源码类型前缀（Libwrt / Immortalwrt）；未导出时取 Immortalwrt，
+    # 替换为 build.sh 导出的源码类型前缀（LibWrt / Immortalwrt）；未导出时取 Immortalwrt，
     # 保证脚本被单独使用时也有确定值。
     sed -i "s/@WIFI_SSID_PREFIX@/${WIFI_SSID_PREFIX:-Immortalwrt}/g" \
         "$BUILD_DIR/package/base-files/files/etc/uci-defaults/992_set-wifi-uci.sh"
@@ -237,6 +237,7 @@ update_dnsmasq_conf() {
 }
 
 
+# 2026-11-07：Lucky 已从固件移除，sysupgrade 备份清单中不再保留 /etc/lucky/。
 add_backup_info_to_sysupgrade() {
     local conf_path="$BUILD_DIR/package/base-files/files/etc/sysupgrade.conf"
 
@@ -244,7 +245,6 @@ add_backup_info_to_sysupgrade() {
         cat >"$conf_path" <<'EOF'
 /etc/AdGuardHome.yaml
 /etc/easytier
-/etc/lucky/
 EOF
     fi
 }

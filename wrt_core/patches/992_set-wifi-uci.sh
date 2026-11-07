@@ -2,7 +2,7 @@
 
 # 2026-11-07：取消以机型命名 Wi-Fi SSID，统一按编译所用源码类型命名。
 # 下方变量的占位符由 wrt_core/modules/target_fixes.sh 在编译期注入：
-#   LibWrt 固件      -> Libwrt（2.4G）/ Libwrt_5G（5G）
+#   LibWrt 固件      -> LibWrt（2.4G）/ LibWrt_5G（5G）
 #   ImmortalWrt 固件 -> Immortalwrt（2.4G）/ Immortalwrt_5G（5G）
 # 同一设备存在多个 5G 射频时共用 _5G 名称；6G 射频在本脚本中默认关闭，也统一归入 _5G。
 WIFI_SSID_PREFIX='@WIFI_SSID_PREFIX@'

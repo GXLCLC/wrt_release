@@ -65,6 +65,7 @@ update_homeproxy() {
 }
 
 
+# 2026-11-07：Lucky 已从固件移除，update.sh 不再调用本函数；保留实现仅为可回滚。
 update_lucky() {
     local lucky_repo_url="https://github.com/gdy666/luci-app-lucky.git"
     local target_custom_feed_dir="$(get_custom_feed_worktree_dir)"
@@ -234,6 +235,7 @@ apply_passwall_tweaks() {
 }
 
 
+# 2026-11-07：MosDNS 已从固件移除，update.sh 不再调用本函数；保留实现仅为可回滚。
 update_mosdns_deconfig() {
     local mosdns_conf="$(get_custom_feed_worktree_dir)/luci-app-mosdns/root/etc/config/mosdns"
     if [ -d "${mosdns_conf%/*}" ] && [ -f "$mosdns_conf" ]; then
