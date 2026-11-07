@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# 2026-11-07：取消以机型命名 Wi-Fi SSID，统一按编译所用源码类型命名。
+# 下方变量的占位符由 wrt_core/modules/target_fixes.sh 在编译期注入：
+#   LibWrt 固件      -> Libwrt（2.4G）/ Libwrt_5G（5G）
+#   ImmortalWrt 固件 -> Immortalwrt（2.4G）/ Immortalwrt_5G（5G）
+# 同一设备存在多个 5G 射频时共用 _5G 名称；6G 射频在本脚本中默认关闭，也统一归入 _5G。
+WIFI_SSID_PREFIX='@WIFI_SSID_PREFIX@'
+
 board_name=$(cat /tmp/sysinfo/board_name)
 
 configure_wifi() {
@@ -87,57 +94,57 @@ EOF
 }
 
 jdc_ax1800_pro_wifi_cfg() {
-	configure_wifi 0 149 HE80 20 'JDC_AX1800PRO_5G' '12345678'
-	configure_wifi 1 1 HE20 20 'JDC_AX1800PRO' '12345678'
+	configure_wifi 0 149 HE80 20 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HE20 20 "${WIFI_SSID_PREFIX}" '12345678'
 }
 
 jdc_ax6600_wifi_cfg() {
-	configure_wifi 0 149 HE80 22 'JDC_AX6600_5G1' '12345678'
-	configure_wifi 1 1 HE20 22 'JDC_AX6600' '12345678'
-	configure_wifi 2 44 HE160 23 'JDC_AX6600_5G2' '12345678'
+	configure_wifi 0 149 HE80 22 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HE20 22 "${WIFI_SSID_PREFIX}" '12345678'
+	configure_wifi 2 44 HE160 23 "${WIFI_SSID_PREFIX}_5G" '12345678'
 }
 
 redmi_ax5_wifi_cfg() {
-	configure_wifi 0 149 HE80 20 'Redmi_AX5_5G' '12345678'
-	configure_wifi 1 1 HE20 20 'Redmi_AX5' '12345678'
+	configure_wifi 0 149 HE80 20 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HE20 20 "${WIFI_SSID_PREFIX}" '12345678'
 }
 
 aliyun_ap8220_wifi_cfg() {
-	configure_wifi 0 149 HE80 26 'Aliyun_AP8220_5G' '12345678'
-	configure_wifi 1 1 HE20 23 'Aliyun_AP8220' '12345678'
+	configure_wifi 0 149 HE80 26 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HE20 23 "${WIFI_SSID_PREFIX}" '12345678'
 }
 
 cmcc_rax3000m_wifi_cfg() {
-	configure_wifi 0 1 HE20 23 'CMCC_RAX3000M' '12345678'
-	configure_wifi 1 44 HE160 25 'CMCC_RAX3000M_5G' '12345678'
+	configure_wifi 0 1 HE20 23 "${WIFI_SSID_PREFIX}" '12345678'
+	configure_wifi 1 44 HE160 25 "${WIFI_SSID_PREFIX}_5G" '12345678'
 }
 
 redmi_ax6_wifi_cfg() {
-	configure_wifi 0 149 HE80 22 'Redmi_AX6_5G' '12345678'
-	configure_wifi 1 1 HE20 21 'Redmi_AX6' '12345678'
+	configure_wifi 0 149 HE80 22 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HE20 21 "${WIFI_SSID_PREFIX}" '12345678'
 }
 
 qihoo_360v6_wifi_cfg() {
-	configure_wifi 0 1 HE80 20 'Qihoo_360V6' '12345678'
-	configure_wifi 1 149 HE20 20 'Qihoo_360V6_5G' '12345678'
+	configure_wifi 0 1 HE80 20 "${WIFI_SSID_PREFIX}" '12345678'
+	configure_wifi 1 149 HE20 20 "${WIFI_SSID_PREFIX}_5G" '12345678'
 }
 
 linksys_mx4x00_wifi_cfg() {
-	configure_wifi 0 44 HE80 22 'Linksys_MX4X00_5G1' '12345678'
-	configure_wifi 1 1 HE20 21 'Linksys_MX4X00' '12345678'
-	configure_wifi 2 149 HE80 21 'Linksys_MX4X00_5G2' '12345678'
+	configure_wifi 0 44 HE80 22 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HE20 21 "${WIFI_SSID_PREFIX}" '12345678'
+	configure_wifi 2 149 HE80 21 "${WIFI_SSID_PREFIX}_5G" '12345678'
 }
 
 gemtek_w1701k_wifi_cfg() {
-	configure_wifi7 0 1 EHT20 23 'Gemtek_W1701K' '12345678'
-	configure_wifi7 1 44 EHT160 23 'Gemtek_W1701K_5G' '12345678'
-	configure_wifi7 2 1 EHT320 23 'Gemtek_W1701K_6G' '12345678' 'sae'
+	configure_wifi7 0 1 EHT20 23 "${WIFI_SSID_PREFIX}" '12345678'
+	configure_wifi7 1 44 EHT160 23 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi7 2 1 EHT320 23 "${WIFI_SSID_PREFIX}_5G" '12345678' 'sae'
 	uci set wireless.radio2.disabled='1'
 }
 
 link_nn6000_wifi_cfg() {
-	configure_wifi 0 149 HE80 19 'Link_NN6000_5G' '12345678'
-	configure_wifi 1 1 HT20 19 'Link_NN6000' '12345678'
+	configure_wifi 0 149 HE80 19 "${WIFI_SSID_PREFIX}_5G" '12345678'
+	configure_wifi 1 1 HT20 19 "${WIFI_SSID_PREFIX}" '12345678'
 }
 
 case "${board_name}" in

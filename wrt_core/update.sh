@@ -23,7 +23,8 @@ fi
 FEEDS_CONF="feeds.conf.default"
 GOLANG_REPO="https://github.com/sbwml/packages_lang_golang"
 GOLANG_BRANCH="27.x"
-THEME_SET="vantage"
+# 2026-11-07：默认主题由 Vantage 改为 Argon，主题包由 custom_feed 从 kenzok8/small-package 同步。
+THEME_SET="argon"
 # 全局默认 LAN 地址；设备 ini 可通过 LAN_ADDR 键覆盖（由 build.sh 导出为环境变量）。
 # 2026-11-07：京东云 IPQ60xx 已单独配置为 192.168.3.1，其它设备保持 192.168.1.1。
 LAN_ADDR="${LAN_ADDR:-192.168.1.1}"
@@ -88,7 +89,8 @@ stage_pre_install_source_fixes() {
     update_tcping
     add_ax6600_led
     set_custom_task
-    apply_passwall_tweaks
+    # 2026-11-07：Passwall 已从固件移除，停用其源码补丁，避免上游变化导致构建失败。
+    # apply_passwall_tweaks
     update_nss_pbuf_performance
     set_build_signature
     update_nss_diag
@@ -98,7 +100,8 @@ stage_pre_install_source_fixes() {
     add_backup_info_to_sysupgrade
     update_mosdns_deconfig
     fix_quickstart
-    update_oaf_deconfig
+    # 2026-11-07：按要求默认启用 OAF，替换原先的禁用逻辑。
+    enable_oaf_by_default
     add_timecontrol
     add_quickfile
     update_lucky
@@ -109,7 +112,8 @@ stage_pre_install_source_fixes() {
     update_dockerman
     set_nginx_default_config
     update_uwsgi_limit_as
-    update_vantage
+    # 2026-11-07：默认主题改为 Argon，停用 Vantage 克隆及「删除其它主题」逻辑。
+    # update_vantage
     update_nginx_ubus_module
     check_default_settings
     install_opkg_distfeeds
@@ -127,7 +131,8 @@ stage_post_install_package_fixes() {
     # 这里处理已安装到 package/feeds/* 的包和最终一致性检查。
     verify_custom_feed_installed_paths
     docker_stack_sync_nftables_compat "$BUILD_DIR" "0"
-    fix_cups_libcups_avahi_depends
+    # 2026-11-07：CUPS 已从固件移除，停用 libcups 依赖修正。
+    # fix_cups_libcups_avahi_depends
     fix_easytier_lua
     update_adguardhome
     update_script_priority
@@ -136,8 +141,9 @@ stage_post_install_package_fixes() {
     fix_opkg_check
     fix_netfilter_kmod_clash
     fix_quectel_cm
-    install_pbr_cmcc
-    fix_pbr_ip_forward
+    # 2026-11-07：PBR 已从固件移除，停用 CMCC 规则注入与 IP forward 修正。
+    # install_pbr_cmcc
+    # fix_pbr_ip_forward
     # apply_hash_fixes
 }
 

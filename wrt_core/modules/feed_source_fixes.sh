@@ -268,25 +268,24 @@ fix_quickstart() {
 }
 
 
-update_oaf_deconfig() {
+# 2026-11-07：按需求默认启用 OAF（应用过滤）。
+# 原逻辑把 appfilter / macfilter / record 的 option enable 改为 0，并在 ensure_default_configs
+# 处插入提前返回，导致功能默认关闭；现在显式把 0 校正为 1，且不再插入提前返回，
+# 让 init 脚本正常生成默认配置。OAF 驱动可能影响网络栈，启用前需确认可接受该影响。
+enable_oaf_by_default() {
     local init_path="$(get_custom_feed_worktree_dir)/open-app-filter/files/appfilter.init"
 
-    if [ -f "$init_path" ]; then
-        sed -i \
-            -e '/config appfilter appfilter/,/config macfilter macfilter/ s/option enable 1/option enable 0/' \
-            -e '/config macfilter macfilter/,/config record / s/option enable 1/option enable 0/' \
-            -e "/config record 'record'/,/config network network/ s/option enable '1'/option enable '0'/" \
-            "$init_path"
-
-        sed -i \
-            -e '/^[[:space:]]*ensure_default_configs$/a\
-\tif [ "$(uci -q get fwx.appfilter.enable)" != "1" ] && [ "$(uci -q get fwx.macfilter.enable)" != "1" ] && [ "$(uci -q get fwx.record.enable)" != "1" ]; then' \
-            -e '/^[[:space:]]*ensure_default_configs$/a\
-\t\treturn 0' \
-            -e '/^[[:space:]]*ensure_default_configs$/a\
-\tfi' \
-            "$init_path"
+    if [ ! -f "$init_path" ]; then
+        echo "Warning: 未找到 $init_path，跳过 OAF 默认启用校正。" >&2
+        return 0
     fi
+
+    sed -i \
+        -e '/config appfilter appfilter/,/config macfilter macfilter/ s/option enable 0/option enable 1/' \
+        -e '/config macfilter macfilter/,/config record / s/option enable 0/option enable 1/' \
+        -e "/config record 'record'/,/config network network/ s/option enable '0'/option enable '1'/" \
+        "$init_path"
+    echo "OAF 默认启用：appfilter / macfilter / record 的 enable 已校正为 1。"
 }
 
 

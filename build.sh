@@ -437,6 +437,15 @@ if [[ -n $DEVICE_LAN_ADDR ]]; then
     export LAN_ADDR="$DEVICE_LAN_ADDR"
 fi
 
+# 2026-11-07：统一 Wi-Fi 名称前缀，取消按机型命名。
+# 判定依据为 compilecfg 命名约定：以 _libwrt 结尾的设备使用 LiBwrt/openwrt-6.x 源码，
+# 其余设备统一按 ImmortalWrt 系处理；前缀在 target_fixes.sh 注入 uci-defaults 脚本。
+if [[ $Dev == *_libwrt ]]; then
+    export WIFI_SSID_PREFIX="Libwrt"
+else
+    export WIFI_SSID_PREFIX="Immortalwrt"
+fi
+
 "$BASE_PATH/update.sh" "$REPO_URL" "$REPO_BRANCH" "$BUILD_DIR" "$COMMIT_HASH"
 
 apply_config

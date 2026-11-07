@@ -113,11 +113,17 @@ GitHub Actions 的手动构建也提供 `add_fragments` 与 `remove_fragments` �
 
 默认片段由 `compilecfg/*.ini` 的 `CONFIG_FRAGMENTS` 指定：
 
-- 所有设备默认包含 `proxy`。
+- 所有设备默认加载 `proxy` 片段；2026-11-07 起该片段不再选择任何软件包（Passwall 已移除），保留文件是因为设备 `compilecfg` 仍列出该片段。
 - IPQ60xx / IPQ807x 设备默认额外包含 `nss`。
 - 只有已显式选择 Dockerman 或明确适合运行 Docker 的设备默认包含 `docker_deps`，用于预置手动安装 Docker 所需的运行依赖，避免 NAND 空间紧张或无 USB 设备被默认加入 Docker 依赖。
 
 `ADD_CONFIG_FRAGMENTS` 会在默认片段后追加，`REMOVE_CONFIG_FRAGMENTS` 会从最终片段中移除对应配置片段。移除只表示“不追加这个 fragment”，不会反向修改设备 `.config` 或 `compile_base.config` 中已经写明的配置。
+
+### 默认主题与 Wi-Fi 名称（2026-11-07 起）
+
+- 默认 LuCI 主题为 Argon：`wrt_core/update.sh` 的 `THEME_SET="argon"`，主题包 `luci-theme-argon` 由 `custom_feed` 从 `kenzok8/small-package` 同步，`fix_default_set()` 会把 LuCI 默认主题依赖改为该包。
+- Wi-Fi 名称不再按机型命名：LibWrt 固件为 `Libwrt`（2.4G）/ `Libwrt_5G`（5G），其余（ImmortalWrt 系）固件为 `Immortalwrt` / `Immortalwrt_5G`。前缀由 `build.sh` 依据设备配置名判定，编译期注入 `wrt_core/patches/992_set-wifi-uci.sh`。
+- 共享配置 `compile_base.config` 补充了 USB 核心与 USB 网络内核模块（`kmod-usb-core`、`kmod-usb3`、`kmod-usb-net` 及若干 `kmod-usb-net-*`）。
 
 ## 7. 三方插件
 
@@ -139,21 +145,13 @@ https://github.com/kenzok8/small-package.git
 - `wrt_core/compilecfg/`：设备构建元信息 `.ini`。
 - `wrt_core/deconfig/`：设备和共享默认配置 `.config`。
 - `wrt_core/deconfig/fragments/`：可组合配置片段。
-- `wrt_core/modules/`：模块化脚本，包括仓库准备、网络重试、feeds/custom_feed、源码修正、LuCI 修正、服务修正、验证、Docker、CUPS 等静态职责模块。
-- `wrt_core/patches/`：补丁、默认设置、Wi-Fi 初始化、NSS 诊断、PBR 规则和其他构建时注入文件。
+- `wrt_core/modules/`：模块化脚本，包括仓库准备、网络重试、feeds/custom_feed、源码修正、LuCI 修正、服务修正、验证、Docker、CUPS 等静态职责模块（CUPS、PBR 相关修正随插件精简已停用调用）。
+- `wrt_core/patches/`：补丁、默认设置、Wi-Fi 初始化、NSS 诊断、PBR 规则和其他构建时注入文件（PBR 规则文件随插件精简已不再注入）。
 
-## 9. OAF（应用过滤）功能使用说明
+## 9. OAF（应用过滤）功能说明
 
-当前固件默认禁用 OAF（应用过滤）功能，目的是规避 OAF 驱动可能对网络栈产生的影响。需要使用 OAF 的用户，请确认能够接受启用后的潜在影响。
+2026-11-07 起，固件默认启用 OAF（应用过滤）功能。OAF 驱动可能对网络栈产生影响，启用前请确认能够接受该影响。
 
-新版本更新后，首次启用 OAF 需要进入命令行模式（SSH 或串口）执行：
+构建时 `wrt_core/modules/feed_source_fixes.sh` 的 `enable_oaf_by_default()` 会把 `appfilter.init` 中 `appfilter` / `macfilter` / `record` 的 `option enable` 显式校正为 `1`，并让 `ensure_default_configs` 正常生成默认配置；`wrt_core/update.sh` 已不再调用原先的禁用逻辑。
 
-```sh
-cd /etc/init.d/
-./appfilter start
-uci set fwx.record.enable=1
-uci commit fwx
-./appfilter start
-```
-
-命令执行完成后，OAF 即完成首次初始化并启动。
+如需关闭，可在 LuCI 中停用对应功能，或通过 `uci` 把 `fwx` 下相关 `enable` 项设为 `0` 并提交后重启 appfilter 服务。

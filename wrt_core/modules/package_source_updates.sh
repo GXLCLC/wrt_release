@@ -238,6 +238,8 @@ add_quickfile() {
 }
 
 
+# 2026-11-07：默认主题已改为 Argon，本函数不再由 update.sh 调用。
+# 保留实现仅为可回滚；它会删除除 Vantage 外的其它主题，恢复调用前须重新评估 Argon 主题目录。
 update_vantage() {
     local repo_url="https://github.com/anothaDev/luci-theme-vantage.git"
     local dst_theme_path="$BUILD_DIR/feeds/luci/themes/luci-theme-vantage"

@@ -190,6 +190,9 @@ install_custom_feed() {
     # https://github.com/kenzok8/small-package.git 顶层已包含 ddnsto 与 luci-app-ddnsto，
     # 因此复用现有 small-package 源稀疏同步，不额外注册新的 feed。
     # luci-app-ddnsto 的 LUCI_DEPENDS 为 +ddnsto +block-mount，两个包需一并同步。
+    # 2026-11-07：默认主题改为 Argon。已核实 https://github.com/kenzok8/small-package.git
+    # 顶层含 luci-theme-argon 目录（Makefile 中 LUCI_TITLE:=Argon Theme），
+    # 因此复用现有 small-package 源稀疏同步，不额外注册 feed。
     local base_custom_feed_packages=(
         xray-core xray-plugin dns2tcp dns2socks haproxy hysteria \
         naiveproxy shadowsocks-rust sing-box v2ray-core v2ray-geodata geoview v2ray-plugin \
@@ -200,7 +203,8 @@ install_custom_feed() {
         lucky luci-app-lucky luci-app-openclash luci-app-homeproxy luci-app-amlogic \
         oaf open-app-filter luci-app-oaf easytier luci-app-easytier \
         msd_lite luci-app-msd_lite cups luci-app-cupsd \
-        ddnsto luci-app-ddnsto
+        ddnsto luci-app-ddnsto \
+        luci-theme-argon
     )
     # 2026-11-07：DDNSTO 两个目录加入安装后路径校验，确保稀疏同步生效后再继续编译。
     local required_feed_dirs=(
@@ -209,7 +213,7 @@ install_custom_feed() {
         luci-app-passwall nikki luci-app-nikki mihomo-meta
         open-app-filter luci-app-oaf lucky luci-app-lucky luci-app-easytier
         luci-app-emmc-health luci-app-airoha-npu
-        ddnsto luci-app-ddnsto
+        ddnsto luci-app-ddnsto luci-theme-argon
     )
     local custom_feed_sources=()
     local missing_feed_dirs=()

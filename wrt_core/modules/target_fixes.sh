@@ -10,6 +10,12 @@ fix_default_set() {
     install -Dm544 "$BASE_PATH/patches/991_custom_settings" "$BUILD_DIR/package/base-files/files/etc/uci-defaults/991_custom_settings"
     install -Dm544 "$BASE_PATH/patches/992_set-wifi-uci.sh" "$BUILD_DIR/package/base-files/files/etc/uci-defaults/992_set-wifi-uci.sh"
 
+    # 2026-11-07：Wi-Fi 名称不再按机型命名。编译期把脚本中的 @WIFI_SSID_PREFIX@
+    # 替换为 build.sh 导出的源码类型前缀（Libwrt / Immortalwrt）；未导出时取 Immortalwrt，
+    # 保证脚本被单独使用时也有确定值。
+    sed -i "s/@WIFI_SSID_PREFIX@/${WIFI_SSID_PREFIX:-Immortalwrt}/g" \
+        "$BUILD_DIR/package/base-files/files/etc/uci-defaults/992_set-wifi-uci.sh"
+
     if [ -f "$BUILD_DIR/package/emortal/autocore/files/tempinfo" ]; then
         if [ -f "$BASE_PATH/patches/tempinfo" ]; then
             \cp -f "$BASE_PATH/patches/tempinfo" "$BUILD_DIR/package/emortal/autocore/files/tempinfo"

@@ -41,5 +41,6 @@ update_feeds() {
 install_feeds() {
     network_retry ./scripts/feeds update -i
     ./scripts/feeds install -a -f
-    ./scripts/feeds install -f luci-theme-vantage luci-app-vantage
+    # 2026-11-07：默认主题改为 Argon，主题包由 custom_feed 同步后在此显式安装。
+    ./scripts/feeds install -f luci-theme-argon
 }
