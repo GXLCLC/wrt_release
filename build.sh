@@ -430,6 +430,13 @@ if [[ -d action_build ]]; then
     BUILD_DIR="action_build"
 fi
 
+# 2026-11-07：设备级 LAN 地址覆盖。仅当设备 ini 显式声明 LAN_ADDR 时导出，
+# 使 update.sh / update_default_lan_addr 只对该设备生效，其它型号仍用全局默认值。
+DEVICE_LAN_ADDR=$(read_ini_by_key "LAN_ADDR")
+if [[ -n $DEVICE_LAN_ADDR ]]; then
+    export LAN_ADDR="$DEVICE_LAN_ADDR"
+fi
+
 "$BASE_PATH/update.sh" "$REPO_URL" "$REPO_BRANCH" "$BUILD_DIR" "$COMMIT_HASH"
 
 apply_config

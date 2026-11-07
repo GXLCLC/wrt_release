@@ -24,7 +24,9 @@ FEEDS_CONF="feeds.conf.default"
 GOLANG_REPO="https://github.com/sbwml/packages_lang_golang"
 GOLANG_BRANCH="27.x"
 THEME_SET="vantage"
-LAN_ADDR="192.168.1.1"
+# 全局默认 LAN 地址；设备 ini 可通过 LAN_ADDR 键覆盖（由 build.sh 导出为环境变量）。
+# 2026-11-07：京东云 IPQ60xx 已单独配置为 192.168.3.1，其它设备保持 192.168.1.1。
+LAN_ADDR="${LAN_ADDR:-192.168.1.1}"
 
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
 BASE_PATH=${BASE_PATH:-$SCRIPT_DIR}
