@@ -57,7 +57,22 @@ apply_x64_device_defaults() {
     install -Dm544 "$BASE_PATH/patches/994_x64_firewall.sh" \
         "$BUILD_DIR/package/base-files/files/etc/uci-defaults/994_x64_firewall.sh"
 
-    echo "X86_64 专属默认设置已注入：CPU 温度脚本 + 防火墙/卸载默认值。"
+    # 3) 固化 Turboacc 出厂默认配置：其 /etc/init.d/turboacc 每次开机都会按
+    #    /etc/config/turboacc 的 hw_flow 重写 firewall.@defaults[0].flow_offloading_hw，
+    #    上游默认 hw_flow='1'（硬件卸载）会覆盖首次启动脚本的设置。
+    #    同步后的包可能位于 custom_feed 源目录或 feeds 工作树（src-link 下两者
+    #    常为同一路径），两处都尝试改为 0；已是 0 时不产生变化。
+    local turboacc_conf
+    for turboacc_conf in \
+        "$(get_custom_feed_source_dir)/luci-app-turboacc/root/etc/config/turboacc" \
+        "$(get_custom_feed_worktree_dir)/luci-app-turboacc/root/etc/config/turboacc"; do
+        if [ -f "$turboacc_conf" ]; then
+            sed -i "s/option hw_flow '1'/option hw_flow '0'/" "$turboacc_conf"
+            echo "Turboacc 出厂 hw_flow 已固化为 0（软件流量卸载）：$turboacc_conf"
+        fi
+    done
+
+    echo "X86_64 专属默认设置已注入：CPU 温度脚本 + 防火墙/卸载默认值 + Turboacc 软件卸载。"
 }
 
 
