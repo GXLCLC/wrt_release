@@ -213,7 +213,7 @@ install_custom_feed() {
         luci-app-passwall nikki luci-app-nikki mihomo-meta
         open-app-filter luci-app-oaf lucky luci-app-lucky luci-app-easytier
         luci-app-emmc-health luci-app-airoha-npu
-        ddnsto luci-app-ddnsto luci-theme-argon luci-app-argon-config
+        ddnsto luci-app-ddnsto luci-theme-argon luci-app-argon-config luci-app-turboacc
     )
     local custom_feed_sources=()
     local missing_feed_dirs=()
@@ -237,6 +237,10 @@ install_custom_feed() {
         "sbwml/luci-app-mosdns|https://github.com/sbwml/luci-app-mosdns.git|v5|mosdns luci-app-mosdns geo2txt"
         "Openwrt-Passwall/openwrt-passwall|https://github.com/Openwrt-Passwall/openwrt-passwall.git|main|luci-app-passwall"
         "nikkinikki-org/OpenWrt-nikki|https://github.com/nikkinikki-org/OpenWrt-nikki.git|main|nikki luci-app-nikki mihomo-meta"
+        # 2026-11-09：X86_64 的 Turboacc。已核实 immortalwrt/luci 未收录 luci-app-turboacc，
+        # kenzok8/small-package 只有 other/lean/luci-app-turboacc（非顶层目录）；
+        # 本仓库 luci 分支顶层即 luci-app-turboacc 包目录，可稀疏同步后直接落到 custom_feed 根。
+        "chenmozhijin/turboacc|https://github.com/chenmozhijin/turboacc.git|luci|luci-app-turboacc"
     )
 
     feeds_path=$(get_feeds_path)
