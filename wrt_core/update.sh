@@ -87,7 +87,8 @@ stage_pre_install_source_fixes() {
     # fix_mkpkg_format_invalid
     change_cpuusage
     update_tcping
-    add_ax6600_led
+    # 2026-11-07：LED 配置插件已移除，停用 luci-app-athena-led 源码克隆。
+    # add_ax6600_led
     set_custom_task
     # 2026-11-07：Passwall 已从固件移除，停用其源码补丁，避免上游变化导致构建失败。
     # apply_passwall_tweaks
@@ -104,13 +105,15 @@ stage_pre_install_source_fixes() {
     # 2026-11-07：按要求默认启用 OAF，替换原先的禁用逻辑。
     enable_oaf_by_default
     add_timecontrol
-    add_quickfile
+    # 2026-11-07：quickfile 已移除，停用其源码克隆与 Makefile 改写。
+    # add_quickfile
     # 2026-11-07：Lucky 已从固件移除，停用源码更新与 50MB 二进制补丁注入。
     # update_lucky
     # fix_rust_compile_error
     update_smartdns
     update_mwan3_fw4
-    update_diskman
+    # 2026-11-07：diskman 已移除，停用其源码同步与 Makefile 改写。
+    # update_diskman
     update_dockerman
     set_nginx_default_config
     update_uwsgi_limit_as

@@ -375,17 +375,8 @@ run_container_build() {
         bash wrt_core/build_container.sh "$Dev" "$container_build_mod"
 }
 
-remove_uhttpd_dependency() {
-    local config_path="$BASE_PATH/../$BUILD_DIR/.config"
-    local luci_makefile_path="$BASE_PATH/../$BUILD_DIR/feeds/luci/collections/luci/Makefile"
-
-    if grep -q "CONFIG_PACKAGE_luci-app-quickfile=y" "$config_path"; then
-        if [ -f "$luci_makefile_path" ]; then
-            sed -i '/luci-light/d' "$luci_makefile_path"
-            echo "Removed uhttpd (luci-light) dependency as luci-app-quickfile (nginx) is enabled."
-        fi
-    fi
-}
+# 2026-11-07：quickfile 已从固件移除，原先专为它删除 luci-light（uhttpd）依赖的
+# remove_uhttpd_dependency 函数一并删除，LuCI 恢复默认的 uhttpd 依赖。
 
 if [[ $Build_Mod == "container" ]]; then
     run_container_build ""
@@ -450,7 +441,7 @@ fi
 
 apply_config
 print_config_fragment_summary
-remove_uhttpd_dependency
+# 2026-11-07：不再调用 remove_uhttpd_dependency（函数已随 quickfile 一并删除）。
 
 cd "$BASE_PATH/../$BUILD_DIR"
 make defconfig

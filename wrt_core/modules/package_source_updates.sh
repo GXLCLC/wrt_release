@@ -36,6 +36,7 @@ check_default_settings() {
 }
 
 
+# 2026-11-07：LED 配置插件已移除，update.sh 不再调用本函数；保留实现仅为可回滚。
 add_ax6600_led() {
     local athena_led_dir="$BUILD_DIR/package/emortal/luci-app-athena-led"
     local repo_url="https://github.com/NONGFAH/luci-app-athena-led.git"
@@ -119,6 +120,7 @@ update_mwan3_fw4() {
 }
 
 
+# 2026-11-07：diskman 已移除，update.sh 不再调用本函数；保留实现仅为可回滚。
 update_diskman() {
     local path="$BUILD_DIR/feeds/luci/applications/luci-app-diskman"
     local repo_url="https://github.com/lisaac/luci-app-diskman.git"
@@ -214,6 +216,7 @@ update_dockerman() {
 }
 
 
+# 2026-11-07：quickfile 已移除，update.sh 不再调用本函数；保留实现仅为可回滚。
 add_quickfile() {
     local repo_url="https://github.com/sbwml/luci-app-quickfile.git"
     local target_dir="$BUILD_DIR/package/emortal/quickfile"

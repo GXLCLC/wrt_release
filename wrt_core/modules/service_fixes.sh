@@ -15,6 +15,7 @@ update_adguardhome() {
 }
 
 
+# 2026-11-07：WireGuard 已从固件移除，开机任务不再注入 wireguard_watchdog 定时任务。
 set_custom_task() {
     local sh_dir="$BUILD_DIR/package/base-files/files/etc/init.d"
     cat <<'EOF' >"$sh_dir/custom_task"
@@ -24,17 +25,6 @@ START=99
 boot() {
     sed -i '/drop_caches/d' /etc/crontabs/root
     echo "15 3 * * * sync && echo 3 > /proc/sys/vm/drop_caches" >>/etc/crontabs/root
-
-    sed -i '/wireguard_watchdog/d' /etc/crontabs/root
-
-    local wg_ifname=$(wg show | awk '/interface/ {print $2}')
-
-    if [ -n "$wg_ifname" ]; then
-        echo "*/15 * * * * /usr/bin/wireguard_watchdog" >>/etc/crontabs/root
-        uci set system.@system[0].cronloglevel='9'
-        uci commit system
-        /etc/init.d/cron restart
-    fi
 
     crontab /etc/crontabs/root
 }
