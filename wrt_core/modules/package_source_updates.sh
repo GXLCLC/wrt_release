@@ -117,6 +117,13 @@ update_mwan3_fw4() {
         echo "错误：从 $luci_app_mwan3_repo 克隆 luci-app-mwan3 仓库失败" >&2
         exit 1
     fi
+
+    # 2026-11-09：按需求清空 Mwan3 默认接口（wan / wan6 / wanb / wanb6）、成员与策略，
+    # 仅保留 globals 与 3 个规则段。luci-app-mwan3 的 uci-defaults 只补 globals，
+    # 不会重新生成接口 / 成员 / 策略，因此覆盖 mwan3 包内配置即可。
+    # 当前只有 x64_immwrt 选中 mwan3，最终固件仅 X86_64 受影响。
+    install -Dm644 "$BASE_PATH/patches/mwan3.config" \
+        "$mwan3_dir/files/etc/config/mwan3"
 }
 
 

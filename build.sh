@@ -428,6 +428,14 @@ if [[ -n $DEVICE_LAN_ADDR ]]; then
     export LAN_ADDR="$DEVICE_LAN_ADDR"
 fi
 
+# 2026-11-09：设备级 Argon 在线壁纸来源覆盖。仅当设备 ini 显式声明
+# ARGON_ONLINE_WALLPAPER 时导出；未声明的设备沿用主题内建壁纸（none）。
+# 值由 target_fixes.sh 编译期注入 993_default_settings.sh 的占位符。
+DEVICE_ARGON_WALLPAPER=$(read_ini_by_key "ARGON_ONLINE_WALLPAPER")
+if [[ -n $DEVICE_ARGON_WALLPAPER ]]; then
+    export ARGON_ONLINE_WALLPAPER="$DEVICE_ARGON_WALLPAPER"
+fi
+
 # 2026-11-07：统一 Wi-Fi 名称前缀，取消按机型命名。
 # 判定依据为 compilecfg 命名约定：以 _libwrt 结尾的设备使用 LiBwrt/openwrt-6.x 源码，
 # 其余设备统一按 ImmortalWrt 系处理；前缀在 target_fixes.sh 注入 uci-defaults 脚本。

@@ -12,6 +12,17 @@ update_adguardhome() {
         echo "错误：从 $repo_url 克隆 luci-app-adguardhome 仓库失败" >&2
         exit 1
     fi
+
+    # 2026-11-09：写入用户指定的 AdGuard Home 默认配置（适用于所有设备）。
+    # 覆盖包内 root/etc/AdGuardHome.yaml：黑名单仅 3 条、上游 DNS 114.114.114.114 /
+    # 223.5.5.5、启用 DNSSEC、缓存 4194304 与 TTL 120 / 7200；其余字段保留上游默认。
+    install -Dm644 "$BASE_PATH/patches/AdGuardHome.yaml" \
+        "$adguardhome_dir/root/etc/AdGuardHome.yaml"
+    # 该包的 /etc/init.d/AdGuardHome 在主配置缺失或为空时会从
+    # /usr/share/AdGuardHome/AdGuardHome_template.yaml 复制一份模板；
+    # 模板自带 2 条旧黑名单，故用同一份配置覆盖，避免旧规则回流。
+    install -Dm644 "$BASE_PATH/patches/AdGuardHome.yaml" \
+        "$adguardhome_dir/root/usr/share/AdGuardHome/AdGuardHome_template.yaml"
 }
 
 

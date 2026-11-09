@@ -24,6 +24,18 @@ fix_default_set() {
 }
 
 
+# 2026-11-09：全局 SmartDNS 默认配置与设备级 Argon 壁纸来源。
+# 993 排在 991 / 992 之后，固件首次启动时由 /etc/uci-defaults 依次执行；
+# 用占位符把设备 ini 的 ARGON_ONLINE_WALLPAPER 注入脚本，
+# 未配置该键的设备取 none（主题内建壁纸），不改动主题包源码目录。
+install_default_settings() {
+    local target="$BUILD_DIR/package/base-files/files/etc/uci-defaults/993_default_settings.sh"
+
+    install -Dm544 "$BASE_PATH/patches/993_default_settings.sh" "$target"
+    sed -i "s/@ARGON_ONLINE_WALLPAPER@/${ARGON_ONLINE_WALLPAPER:-none}/g" "$target"
+}
+
+
 fix_miniupnpd() {
     local miniupnpd_dir="$BUILD_DIR/feeds/packages/net/miniupnpd"
     local patch_file="999-chanage-default-leaseduration.patch"

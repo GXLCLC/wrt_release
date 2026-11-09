@@ -125,6 +125,12 @@ GitHub Actions 的手动构建也提供 `add_fragments` 与 `remove_fragments` �
 - Wi-Fi 名称不再按机型命名：LibWrt 固件为 `LibWrt`（2.4G）/ `LibWrt_5G`（5G），其余（ImmortalWrt 系）固件为 `Immortalwrt` / `Immortalwrt_5G`。前缀由 `build.sh` 依据设备配置名判定，编译期注入 `wrt_core/patches/992_set-wifi-uci.sh`。
 - 共享配置 `compile_base.config` 补充了 USB 核心与 USB 网络内核模块（`kmod-usb-core`、`kmod-usb3`、`kmod-usb-net` 及若干 `kmod-usb-net-*`）。
 
+### 默认 DNS 配置与 X86_64 差异（2026-11-09 起）
+
+- AdGuard Home（**所有设备**）：`wrt_core/modules/service_fixes.sh` 的 `update_adguardhome()` 在克隆源码后用 `wrt_core/patches/AdGuardHome.yaml` 同时覆盖默认配置与恢复模板——黑名单只保留海哥的清单、anti-AD、刘淳的清单 3 条；上游 DNS 为 `114.114.114.114` 与 `223.5.5.5`；启用 DNSSEC；DNS 缓存 `4194304`，覆盖最小 / 最大 TTL 为 `120` / `7200`；其余字段保持上游默认。
+- SmartDNS（**所有设备**）：`wrt_core/patches/993_default_settings.sh` 作为 uci-defaults 注入，本地端口 `6053`、不自动设置 Dnsmasq，并写入 6 个 `udp` 上游（114DNS / 阿里 / 腾讯 / 谷歌 / 字节跳动 / Cloudflare）；其它项保持原预设。
+- X86_64 专属：`x64_immwrt.config` 移除 `luci-app-dockerman` 并新增 `luci-app-wechatpush`、`nlbwmon` / `luci-app-nlbwmon`；`x64_immwrt.ini` 移除 `docker_deps` 片段，并通过 `ARGON_ONLINE_WALLPAPER=bing` 在 uci-defaults 中把 Argon 在线壁纸设为 Bing（其它设备为内建 `none`）；`wrt_core/patches/mwan3.config` 清空 Mwan3 默认接口 / 成员 / 策略，仅保留 `globals` 与规则段。
+
 ## 7. 三方插件
 
 三方插件主要通过 feeds 机制加入，其中 small-package 源自：

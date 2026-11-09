@@ -75,6 +75,8 @@ stage_pre_install_source_fixes() {
     # 这里仅修改源码树与 feeds/*，不能依赖 package/feeds/*。
     update_homeproxy
     fix_default_set
+    # 2026-11-09：全局 SmartDNS 默认配置与设备级 Argon 壁纸来源（uci-defaults）。
+    install_default_settings
     fix_miniupnpd
     update_golang
     change_dnsmasq2full
