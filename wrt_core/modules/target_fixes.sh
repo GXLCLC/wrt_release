@@ -17,8 +17,14 @@ fix_default_set() {
         "$BUILD_DIR/package/base-files/files/etc/uci-defaults/992_set-wifi-uci.sh"
 
     if [ -f "$BUILD_DIR/package/emortal/autocore/files/tempinfo" ]; then
-        if [ -f "$BASE_PATH/patches/tempinfo" ]; then
-            \cp -f "$BASE_PATH/patches/tempinfo" "$BUILD_DIR/package/emortal/autocore/files/tempinfo"
+        # 2026-11-09：X86_64 改用能读 hwmon / thermal 节点的 tempinfo_x86；
+        # 其余设备沿用通用版，取值逻辑不变。
+        local tempinfo_patch="$BASE_PATH/patches/tempinfo"
+        if [ "${X64_DEVICE_DEFAULTS:-0}" = "1" ] && [ -f "$BASE_PATH/patches/tempinfo_x86" ]; then
+            tempinfo_patch="$BASE_PATH/patches/tempinfo_x86"
+        fi
+        if [ -f "$tempinfo_patch" ]; then
+            \cp -f "$tempinfo_patch" "$BUILD_DIR/package/emortal/autocore/files/tempinfo"
         fi
     fi
 }
@@ -33,6 +39,25 @@ install_default_settings() {
 
     install -Dm544 "$BASE_PATH/patches/993_default_settings.sh" "$target"
     sed -i "s/@ARGON_ONLINE_WALLPAPER@/${ARGON_ONLINE_WALLPAPER:-none}/g" "$target"
+}
+
+
+# 2026-11-09：X86_64 专属默认设置，由 x64_immwrt.ini 的 X64_DEVICE_DEFAULTS=1 开启。
+# 其它设备不声明该键，本函数直接返回，源码树与固件均不受影响。
+apply_x64_device_defaults() {
+    [ "${X64_DEVICE_DEFAULTS:-0}" = "1" ] || return 0
+
+    # 1) CPU 温度：ImmortalWrt 的 autocore 只给 ipq / mediatek / qualcommax 目标安装
+    #    /sbin/tempinfo，x86_64 缺失导致 luci.getTempInfo 返回空、架构信息页不显示温度。
+    #    这里改由 base-files 直接提供该脚本，不修改 autocore 的目标条件，作用域可控。
+    install -Dm755 "$BASE_PATH/patches/tempinfo_x86" \
+        "$BUILD_DIR/package/base-files/files/sbin/tempinfo"
+
+    # 2) 防火墙默认值与软件流量卸载，固件首次启动时由 uci-defaults 写入。
+    install -Dm544 "$BASE_PATH/patches/994_x64_firewall.sh" \
+        "$BUILD_DIR/package/base-files/files/etc/uci-defaults/994_x64_firewall.sh"
+
+    echo "X86_64 专属默认设置已注入：CPU 温度脚本 + 防火墙/卸载默认值。"
 }
 
 

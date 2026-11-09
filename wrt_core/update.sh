@@ -77,6 +77,8 @@ stage_pre_install_source_fixes() {
     fix_default_set
     # 2026-11-09：全局 SmartDNS 默认配置与设备级 Argon 壁纸来源（uci-defaults）。
     install_default_settings
+    # 2026-11-09：仅 X86_64（X64_DEVICE_DEFAULTS=1）的温度脚本与防火墙默认值。
+    apply_x64_device_defaults
     fix_miniupnpd
     update_golang
     change_dnsmasq2full

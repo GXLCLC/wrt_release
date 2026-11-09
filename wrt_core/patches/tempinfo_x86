@@ -1,0 +1,41 @@
+#!/bin/sh
+# 2026-11-09：X86_64 专用 CPU 温度脚本，供 LuCI「架构信息」页的 luci.getTempInfo 调用。
+# 根因：ImmortalWrt 的 package/emortal/autocore/Makefile 只在
+#       ipq% / mediatek% / qualcommax% 目标安装 /sbin/tempinfo，x86_64 不安装；
+#       luci-base 的 getTempInfo 在 /sbin/tempinfo 缺失时返回空对象，页面便不显示温度。
+#       autocore 在 x86 上已依赖 lm-sensors，但 read 的是 hwmon / thermal sysfs 节点。
+# 注入：wrt_core/modules/target_fixes.sh 的 apply_x64_device_defaults() 把本文件
+#       安装到 package/base-files/files/sbin/tempinfo，绕过 autocore 的目标条件；
+#       仅 X64_DEVICE_DEFAULTS=1 的设备执行，其它设备仍用 patches/tempinfo。
+# 取值：/sys/class/hwmon/hwmon*/temp*_input（coretemp / k10temp 等，单位毫摄氏度）
+#       → /sys/class/thermal/thermal_zone*/temp（x86_pkg_temp / ACPI，同单位），
+#       取同一来源中的最大值；无有效读数时回显 No temperature info。
+
+max_of() {
+    local f v max=""
+
+    for f in $1; do
+        [ -r "$f" ] || continue
+        v=$(cat "$f" 2>/dev/null) || continue
+        case "$v" in
+            ''|*[!0-9-]*) continue ;;
+        esac
+        [ "$v" -gt 0 ] 2>/dev/null || continue
+        if [ -z "$max" ] || [ "$v" -gt "$max" ]; then
+            max="$v"
+        fi
+    done
+
+    printf '%s' "$max"
+}
+
+millidegree=$(max_of '/sys/class/hwmon/hwmon*/temp*_input')
+[ -n "$millidegree" ] || millidegree=$(max_of '/sys/class/thermal/thermal_zone*/temp')
+
+if [ -n "$millidegree" ]; then
+    awk -v v="$millidegree" 'BEGIN { printf "CPU: %.1f°C", v / 1000 }'
+else
+    printf 'No temperature info'
+fi
+
+exit 0

@@ -436,6 +436,12 @@ if [[ -n $DEVICE_ARGON_WALLPAPER ]]; then
     export ARGON_ONLINE_WALLPAPER="$DEVICE_ARGON_WALLPAPER"
 fi
 
+# 2026-11-09：X86_64 专属编译期开关，仅当设备 ini 显式声明 X64_DEVICE_DEFAULTS=1 时导出。
+DEVICE_X64_DEFAULTS=$(read_ini_by_key "X64_DEVICE_DEFAULTS")
+if [[ -n $DEVICE_X64_DEFAULTS ]]; then
+    export X64_DEVICE_DEFAULTS="$DEVICE_X64_DEFAULTS"
+fi
+
 # 2026-11-07：统一 Wi-Fi 名称前缀，取消按机型命名。
 # 判定依据为 compilecfg 命名约定：以 _libwrt 结尾的设备使用 LiBwrt/openwrt-6.x 源码，
 # 其余设备统一按 ImmortalWrt 系处理；前缀在 target_fixes.sh 注入 uci-defaults 脚本。
